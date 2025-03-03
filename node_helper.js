@@ -178,7 +178,7 @@ module.exports = NodeHelper.create({
 				item.mode = Constants.TravelModes.DRIVE;
 			}			
 			const mode = item.mode;
-			if (this.config.debug) Log.info(`Module ${this.name}: inside groupByModeHighwaysTolls ${item}.`);
+			if (this.config.debug) Log.info(`Module ${this.name}: inside groupByModeHighwaysTolls ${JSON.stringify(item)}.`);
 
 			const avoidHighways = item.avoidHighways ?? false;
 			const avoidTolls = item.avoidTolls ?? false;

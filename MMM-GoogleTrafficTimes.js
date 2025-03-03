@@ -133,8 +133,9 @@ Module.register("MMM-GoogleTrafficTimes", {
 		}
 
 		// symbol details only with driving mode, others do not have this info
+		var isScheduledNow = ScheduleHelper.isScheduledNow(self.config.debug, destination.name, destination.schedules);
 		if (self.config.debug) Log.info(`Module ${this.name}: showSymbolDetails ${self.config.showSymbolDetails} | travel move ${destination.mode}.`);
-		if (destination.mode === TravelModes.DRIVE && self.config.showSymbolDetails && ScheduleHelper.isScheduledNow(destination.schedules)) {
+		if (destination.mode === TravelModes.DRIVE && self.config.showSymbolDetails && isScheduledNow) {
 			var symbolDetails = document.createElement("span");
 			// let's give traffic a little gap of offsetTimePercentage before showing the traffic symbol
 			var timeInSecondsWithGap = timeInSeconds + (timeInSeconds * (self.config.offsetTimePercentage / 100));
@@ -144,7 +145,7 @@ Module.register("MMM-GoogleTrafficTimes", {
 		}
 
 		var firstLineText = document.createElement("span");
-		if (destination.mode === TravelModes.DRIVE && ScheduleHelper.isScheduledNow(destination.schedules)) firstLineText.innerHTML = response.durationTrafficTimeText;
+		if (destination.mode === TravelModes.DRIVE && isScheduledNow) firstLineText.innerHTML = response.durationTrafficTimeText;
 		else firstLineText.innerHTML = response.durationText;
 		firstLineDiv.appendChild(firstLineText);
 		container.appendChild(firstLineDiv);
