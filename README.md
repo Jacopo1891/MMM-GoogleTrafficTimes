@@ -14,6 +14,7 @@ If the in traffic travel time is longer then a symbol will be showed.
 - [Example Screenshot](#example-screenshot)
 - [Suggestions](#suggestions)
 - [Buy me a coffee](#buy-me-a-coffee)
+- [Star History](#star-history)
 
 # Installation
 
@@ -265,3 +266,7 @@ Find it useful? Please consider buying me or other contributors a coffee.
 <a href="https://www.buymeacoffee.com/jacopo1891d">
 <img style="height: 51px; width: 181px; max-width: 100%;" alt="blue-button" src="https://github.com/Jacopo1891/MMM-GoogleTrafficTimes/assets/5861330/43f41b8d-13e5-4711-877d-cab090bc56b0">
 </a>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Jacopo1891/MMM-GoogleTrafficTimes&type=Date)](https://www.star-history.com/#Jacopo1891/MMM-GoogleTrafficTimes&Date)
