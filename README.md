@@ -48,13 +48,13 @@ var config = {
                 address: 'xx.xxxxxx,xx.xxxxxx',
                 addressFormat: 'coordinates'
               },
-						  work: {
-							  address: 'SW1A 2PW',
-							  addressFormat: 'address'
-						  }
-					  },
+		work: {
+                address: 'SW1A 2PW',
+		addressFormat: 'address'
+		}
+            },
             destinations: [{
-                    origin: "home",
+                    origin: 'home',
                     name: 'Home -> Work',
                     address: 'SW1A 2PW',
                     addressFormat: 'address',
@@ -65,7 +65,7 @@ var config = {
                     showDestinationOutsideScheduleWithoutTraffic: true
                 },
                 {
-                    origin: "home",
+                    origin: 'home',
                     name: 'Home -> Work Highways',
                     address: 'SW1A 2PW',
                     addressFormat: 'address',
@@ -76,7 +76,7 @@ var config = {
                     showDestinationOutsideScheduleWithoutTraffic: false
                 },
                 {
-                    origin: "work",
+                    origin: 'work',
                     name: 'Work -> Gym',
                     address: 'xx.xxxxxx,xx.xxxxxx',
                     addressFormat: 'coordinates',
@@ -85,7 +85,7 @@ var config = {
                     showDestinationOutsideScheduleWithoutTraffic: false
                 },
                 {
-                    origin: "home",
+                    origin: 'home',
                     name: 'Home -> Gym 2',
                     address: 'xx.xxxxxx,xx.xxxxxx',
                     addressFormat: 'coordinates',
