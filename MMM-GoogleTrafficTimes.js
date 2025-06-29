@@ -3,13 +3,19 @@ Module.register("MMM-GoogleTrafficTimes", {
 	defaults: {
 		key: "",
 		mode: "drive",
-		origin: {
-			address: "SW1A 2PW",
-			addressFormat: 'address',
+		origins: {
+			home: {
+				address: "SW1A 2PW",
+				addressFormat: "address"
+			},
+			work: {
+				address: "XXX",
+				addressFormat: "address"
+			}
 		},
-		originFormat: 'address',
 		destinations: [
 			{
+				origin: "home",
 				name: "Work",
 				address: "SW1A 2PW",
 				addressFormat: 'address',
@@ -17,6 +23,7 @@ Module.register("MMM-GoogleTrafficTimes", {
 				showDestinationOutsideScheduleWithoutTraffic: true,
 			},
 			{
+				origin: "work",
 				name: "Gym",
 				address: "XXX",
 				addressFormat: 'address',

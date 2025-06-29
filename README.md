@@ -1,7 +1,7 @@
 # Module: Google Traffic Times
 
-A module for the MagicMirror that displays driving times from a location to one or more destinations based on Google Maps Traffic information. As it uses the times in traffic the values are dynamic as long as there is reasonaby accurate traffic detail available to Google in your area.
-If the in traffic travel time is longer then a symbol will be showed.
+A MagicMirror module that displays travel times from one or more origins to various destinations using Google Maps Traffic information. Travel times are dynamic and update based on real-time traffic data, provided Google has accurate traffic information for your area.
+If the travel time with traffic is longer than usual, a warning symbol will be displayed.
 
 # Table of contents
 
@@ -18,7 +18,7 @@ If the in traffic travel time is longer then a symbol will be showed.
 
 # Installation
 
-Navigate into your MagicMirror's ~/MagicMirror/modules folder and execute
+Navigate to your MagicMirror's ~/MagicMirror/modules folder and run
 
 ```bash
 git clone https://github.com/Jacopo1891/MMM-GoogleTrafficTimes.git
@@ -43,12 +43,19 @@ var config = {
         position: 'top_left',
         config: {
             key: 'YOUR_KEY',
-            origin: {
-                address: 'SW1A 1AA',
-                addressFormat: 'address',
-            },
+            origins: {
+              home: {
+                address: 'xx.xxxxxx,xx.xxxxxx',
+                addressFormat: 'coordinates'
+              },
+						  work: {
+							  address: 'SW1A 2PW',
+							  addressFormat: 'address'
+						  }
+					  },
             destinations: [{
-                    name: 'Work',
+                    origin: "home",
+                    name: 'Home -> Work',
                     address: 'SW1A 2PW',
                     addressFormat: 'address',
                     mode: 'drive',
@@ -58,7 +65,8 @@ var config = {
                     showDestinationOutsideScheduleWithoutTraffic: true
                 },
                 {
-                    name: 'Work Highways',
+                    origin: "home",
+                    name: 'Home -> Work Highways',
                     address: 'SW1A 2PW',
                     addressFormat: 'address',
                     mode: 'drive',
@@ -68,7 +76,8 @@ var config = {
                     showDestinationOutsideScheduleWithoutTraffic: false
                 },
                 {
-                    name: 'Gym',
+                    origin: "work",
+                    name: 'Work -> Gym',
                     address: 'xx.xxxxxx,xx.xxxxxx',
                     addressFormat: 'coordinates',
                     mode: 'walk',
@@ -76,7 +85,8 @@ var config = {
                     showDestinationOutsideScheduleWithoutTraffic: false
                 },
                 {
-                    name: 'Gym 2',
+                    origin: "home",
+                    name: 'Home -> Gym 2',
                     address: 'xx.xxxxxx,xx.xxxxxx',
                     addressFormat: 'coordinates',
                     mode: 'bicycle',
@@ -101,7 +111,7 @@ var config = {
 ```
 
 - `key`: Your Google API key as described in the relevant section of this readme
-- `origin`: This is the location all travel times to the destinations below will be measured from.
+- `origins`: An object containing all possible starting locations, referenced by key in each destination.
 - `addressFormat`: The type of origin: `address` or `coordinates` (latitude,longitude)
 - `destinations`: Those are the locations you need travel times to (min 1, max 20).
 - `updateInterval`: Time (in milliseconds) before refreshing data. Default: 900000 -> 15 minutes.
@@ -119,11 +129,13 @@ var config = {
 - `debug`: true or false, shows logs on console (node_helper -> backend, module -> browser).
 
 The Destinations with full address (Street , City, Country) need to be entered in the form
+Make sure that every "origin key" in your destinations matches a key defined in the origins object.
 
 ```javascript
 [
   {
-    name: "Work",
+    origin: "home", // key must match with destination's one
+    name: "Home -> Work",
     address: "SW1A 2PW",
     addressFormat: "address",
     mode: "drive", // default drive - also valid walk or bicycle
@@ -140,7 +152,8 @@ If you like to use coordinates set
 ```javascript
 [
   {
-    name: "Work",
+    origin: "home",
+    name: "Home -> Work",
     address: "xx.xxxxxx,xx.xxxxxx", //latitude,longitude no space
     addressFormat: "coordinates"
   }
@@ -148,7 +161,7 @@ If you like to use coordinates set
 ```
 
 ⚠ Important Note:
-Each unique combination of travel mode, highway avoidance, and toll avoidance creates a separate request to the API. If your configuration includes many different variations, this can result in a high number of API calls, potentially increasing costs. Be mindful of this when setting up your destinations to avoid unexpected charges.
+Each unique combination of origin, travel mode, highway avoidance, and toll avoidance creates a separate request to the API. If your configuration includes many different variations, this can result in a high number of API calls, potentially increasing costs. Be mindful of this when setting up your destinations to avoid unexpected charges.
 
 The Label `name` appears as the title for each result as shown in the Example Screenshot below.
 In this release the origin and destination addresses have been tested across a large number of countries but certainly not all.

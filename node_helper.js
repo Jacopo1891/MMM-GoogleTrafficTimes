@@ -33,12 +33,19 @@ module.exports = NodeHelper.create({
 			}
 		};
 	
-		const groupedDestinations = this.groupByModeHighwaysTolls(this.config.destinations);
+		const filteredDestinations = this.config.destinations.filter(dest => {
+			if (!dest.origin) {
+				Log.warn(`Module ${this.name}: destination "${dest.name}" skipped because origin is missing.`);
+				return false;
+			}
+			return true;
+		});
+		const groupedDestinations = this.groupByModeHighwaysTolls(filteredDestinations);		
 		if (config.debug) Log.info(`Module ${this.name}: groupedDestinations ${JSON.stringify(groupedDestinations)}.`);
 	
 		const requestPromises = Object.keys(groupedDestinations).map(async (key) => {
-			const [mode, avoidHighways, avoidTolls] = key.split("_");
-			const destinationsByKey = groupedDestinations[key];
+		const [originKey, mode, avoidHighways, avoidTolls] = key.split("_|_");			
+		const destinationsByKey = groupedDestinations[key];
 			if (config.debug) Log.info(`Module ${this.name}: destinationsByKey -> ${JSON.stringify(destinationsByKey)}.`);
 
 			const destinationsByKeyToShow = destinationsByKey.filter(destination => 
@@ -49,8 +56,12 @@ module.exports = NodeHelper.create({
 			const destinations = this.getDestinationsWaypoint(destinationsByKeyToShow);
 			if (config.debug) Log.info(`Module ${this.name}: destinations waypoint -> ${JSON.stringify(destinations)}.`);
 
-			const originWaypoint = this.getWaypoint(this.config.origin);
-			
+			const originObj = this.getOriginByKey(originKey);
+			if (!originObj) {
+				Log.warn(`Module ${this.name}: origin object not found for key "${originKey}". Skipping request.`);
+				return Promise.resolve();
+			}
+			const originWaypoint = this.getWaypoint(originObj);			
 			const origin = {
 				waypoint: originWaypoint.waypoint,
 				routeModifiers: {
@@ -141,6 +152,7 @@ module.exports = NodeHelper.create({
 			default:
 				Log.info(`Module ${this.name}: Unknown origin format '${location.originFormat}'.`);
 		}
+		return null;
 	},
 	
 	createAddressWaypoint(address) {
@@ -172,21 +184,22 @@ module.exports = NodeHelper.create({
 
 	groupByModeHighwaysTolls(data) {
 		const grouped = {};
-	
+
 		data.forEach(item => {
 			if (!item.mode || item.mode.trim() === "") {
 				item.mode = Constants.TravelModes.DRIVE;
-			}			
+			}
 			const mode = item.mode;
 			if (this.config.debug) Log.info(`Module ${this.name}: inside groupByModeHighwaysTolls ${JSON.stringify(item)}.`);
 
 			const avoidHighways = item.avoidHighways ?? false;
 			const avoidTolls = item.avoidTolls ?? false;
-			const key = `${mode}_${avoidHighways}_${avoidTolls}`;	
+			const originKey = item.origin;
+			const key = `${originKey}_|_${mode}_|_${avoidHighways}_|_${avoidTolls}`;
 			if (!grouped[key]) grouped[key] = [];
 			grouped[key].push(item);
 		});
-	
+
 		return grouped;
 	},
 	
@@ -203,5 +216,18 @@ module.exports = NodeHelper.create({
 			durationText: response.localizedValues.staticDuration.text,
 			durationTrafficTimeText: response.localizedValues.duration.text
 		};
-	}
+	},
+
+	getOriginByKey(originKey) {
+		if (!this.config.origins || !originKey) {
+			Log.warn(`Module ${this.name}: origins config or origin key missing for key "${originKey}".`);
+			return null;
+		}
+		const originObj = this.config.origins[originKey];
+		if (!originObj) {
+			Log.warn(`Module ${this.name}: origin "${originKey}" not found in origins config.`);
+			return null;
+		}
+		return originObj;
+	},
 });
